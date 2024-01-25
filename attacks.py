@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
 
-def brute_force():
+def brute_force_miranda():
     all_possible_seeds = np.array(list(itertools.product([0, 1], repeat=16)))
     # Exclude the all-zero seed
     valid_seeds = all_possible_seeds[np.any(all_possible_seeds, axis=1)]
@@ -10,6 +10,26 @@ def brute_force():
     # There are 65535 seeds
     # TODO: Decrypt with each seed, and compare decrypted
     # value with encrypted value (NOT original image, but the COMPRESSED image)
+
+def brute_force_manu(cipher, c):
+    N = len(cipher)
+    m = len(c)
+    
+    for possible_seed in range(2**m):
+        # Generate LFSR output with the current seed
+        state = np.array([int(bit) for bit in format(possible_seed, f'0{m}b')])
+        LFSR_output = np.zeros(N)
+        
+        for i in range(N):
+            next_bit = np.mod(np.sum(c*state), 2)
+            LFSR_output[i] = state[m-1]
+            state = np.concatenate((np.array([next_bit]), state[0:m-1]))
+        
+        # Check if LFSR output matches the ciphertext
+        if np.array_equal(LFSR_output, cipher):
+            return possible_seed
+    
+    return None
 
 def known_plaintxt(plain, cipher):
     # TODO
