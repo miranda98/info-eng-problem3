@@ -82,7 +82,7 @@ image_binary_crypt = np.mod(image_binary+stream_cipher,2)
 stream_cipher_rec = stream_cipher
 
 # Decrypt using the stream cipher 
-image_binary_decrypt = np.mod(image_binary_crypt+0*stream_cipher_rec,2) 
+image_binary_decrypt = np.mod(image_binary_crypt+stream_cipher_rec,2) 
 
 # --------------- Decompression --------------------
 
